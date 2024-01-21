@@ -41,9 +41,9 @@
     filename='assets/vendor/libs/apex-charts/apex-charts.css')}}"" />
 
     <!-- Tambahkan stylesheet DataTables -->
-    <link href="https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.css" rel="stylesheet">
- 
-    <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.js"></script>
+    <link href=" https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.css" rel="stylesheet">
+
+  <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.js"></script>
 
 
 
@@ -101,6 +101,8 @@
 </head>
 
 <body>
+
+
   <!-- Layout wrapper -->
   <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -218,7 +220,15 @@
       <!-- Layout container -->
       <div class="layout-page">
         <!-- Navbar -->
-
+        <nav
+          class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+          id="layout-navbar">
+          <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0   d-xl-none ">
+            <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+              <i class="bx bx-menu bx-sm"></i>
+            </a>
+          </div>
+        </nav>
         <!-- / Navbar -->
 
         <!-- Content wrapper -->
@@ -243,10 +253,10 @@
   <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
 
   <script>
-    $(document).ready(function(){
-        $('#example').DataTable();
+    $(document).ready(function () {
+      $('#example').DataTable();
     });
-</script>
+  </script>
 
   <script>
     function readMore(element) {
