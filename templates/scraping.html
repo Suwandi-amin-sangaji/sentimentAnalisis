@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <div class="d-flex align-items-end row">
+                    <div class="col-sm-7">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                Scraping Data 🎉
+                            </h5>
+                            <p class="mb-4">
+                                Scraping data adalah proses mengambil data dari website.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-center text-sm-left">
+                        <div class="card-body pb-0 px-0 px-md-4">
+                            <img src="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
+                                height="140" alt="View Badge User"
+                                data-app-dark-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-dark.png')}}"
+                                data-app-light-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form controls -->
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <form method="post" action="/submit">
+                        <div class="mb-3">
+                            <label for="sourceDropdown" class="form-label">Sumber Berita</label>
+                            <select class="form-select" id="sourceDropdown" name="source">
+                                <option value="detik">Detik</option>
+                                <option value="kompas">Kompas</option>
+                                <option value="tribun">Tribun</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="linkInput" class="form-label">Masukkan Kata Kunci</label>
+                            <input type="text" class="form-control" id="katakunci" value="rohingya" name="Kata Kunci">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="linkInput" class="form-label">Jumlah Scraping</label>
+                            <input type="number" class="form-control" id="jumlah" value="10" name="Jumlah">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-12">
+
+                    <h3 class="text-center">Hasil Scraping</h3>
+                    <!-- Tabel untuk menampilkan hasil scraping -->
+                    {% if data %}
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{{ url_for('download') }}" method="post">
+                                <!-- Tambahkan elemen formulir yang diperlukan di sini -->
+                                <button type="submit" class="btn btn-danger mb-3"><i class="bx bx-download"></i> Download</button>
+                            </form>
+                            <table id="example" class="table table-bordered table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Judul</th>
+                                        <th>Tanggal</th>
+                                        <th>Link</th>
+                                        <th>Isi Berita</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in data %}
+                                    <tr>
+                                        <td>{{ item['title'] }}</td>
+                                        <td>{{ item['date'] }}</td>
+                                        <td>{{ item['link'] }}</td>
+                                        <td>
+                                            <div class="content-preview">{{ item['content'] }}</div>
+                                            <span class="read-more-btn" onclick="readMore(this)">Read more</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        {% else %}
+                        <p class="text-center">Belum ada scraping yang dilakukan.</p>
+                        {% endif %}
+
+                    </div>
+                    <div id="loading" class="loading-overlay">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}
