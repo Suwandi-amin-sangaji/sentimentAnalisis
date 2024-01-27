@@ -2,40 +2,108 @@
 
 {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row">
-      <div class="col-lg-12 mb-4 order-0">
-        <div class="card">
-          <div class="d-flex align-items-end row">
-            <div class="col-sm-7">
-              <div class="card-body">
-                <h5 class="card-title text-primary">
-                  Pre Processing Data 🎉
-                </h5>
-                <p class="mb-4">
-                  Pre Processing adalah proses yang dilakukan pada data yang ada sebelum diproses ke dalam model. 
-                </p>
-
-                <a
-                  href="javascript:;"
-                  class="btn btn-sm btn-outline-primary"
-                  >Mulai</a
-                >
-              </div>
+  <div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+      <div class="card">
+        <div class="d-flex align-items-end row">
+          <div class="col-sm-7">
+            <div class="card-body">
+              <h5 class="card-title text-primary">
+                Pre Processing Data 🎉
+              </h5>
+              <p class="mb-4">
+                Pre Processing adalah proses yang dilakukan pada data yang ada sebelum diproses ke dalam model. <br>
+                <!-- 1. Cleansing <br>
+                2. Stopword Removal, Case Folding & Tokenizing <br>
+                3. Stemming -->
+              </p>
+              <form action="/process" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="file">Masukkan File CSV Hasil Scraping Data</label>
+                  <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-sm btn-outline-primary">Proses Data</button>
+              </form>
             </div>
-            <div class="col-sm-5 text-center text-sm-left">
-              <div class="card-body pb-0 px-0 px-md-4">
-                <img
-                  src="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
-                  height="140"
-                  alt="View Badge User"
-                  data-app-dark-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-dark.png')}}"
-                  data-app-light-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
-                />
+          </div>
+          <div class="col-sm-5 text-center text-sm-left">
+            <div class="card-body pb-0 px-0 px-md-4">
+              <img src="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
+                height="140" alt="View Badge User"
+                data-app-dark-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-dark.png')}}"
+                data-app-light-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-md-12">
+          <h3 class="text-center">Hasil Processing</h3>
+          <!-- Tabel untuk menampilkan hasil scraping -->
+          {% if data %}
+          <div class="card">
+            <div class="card-body">
+              <form action="{{ url_for('download_processing') }}" method="post">
+                <!-- Tambahkan elemen formulir yang diperlukan di sini -->
+                <button type="submit" class="btn btn-danger mb-3"><i class="bx bx-download"></i> Download</button>
+              </form>
+              <div class="table-responsive text-nowrap table-bordered">
+                <table class="table">
+                  <thead>
+                    <tr class="text-nowrap">
+                      <th>Judul</th>
+                      <th>Tanggal</th>
+                      <th>Link</th>
+                      <th>Isi Berita</th>
+                      <th>text_tokenize</th>
+                      <th>Text clean</th>
+                      <th>Label</th>
+                      <th>Skor Sentimen</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in data %}
+                    <tr>
+                      <td>{{ item['title'] }}</td>
+                      <td>{{ item['date'] }}</td>
+                      <td>{{ item['link'] }}</td>
+                      <td>
+                        <div class="content-preview">{{ item['content'] }}</div>
+                        <span class="read-more-btn" onclick="readMore(this)">Read more</span>
+                      </td>
+                      <td>
+                        <div class="content-preview">{{ item['text_tokenize'] }}</div>
+                        <span class="read-more-btn" onclick="readMore(this)">Read more</span>
+                      </td>
+                      <td>
+                        <div class="content-preview">{{ item['text_clean'] }}</div>
+                        <span class="read-more-btn" onclick="readMore(this)">Read more</span>
+                      </td>
+                      <td>{{ item['label'] }}</td>
+                      <td>{{ item['score'] }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <p class="text-center">Belum Dilakukan Pre Processing.</p>
+              {% endif %}
+            </div>
+            <div id="loading" class="loading-overlay">
+              <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">Membuatuhkan Waktu, Mohon Menunggu Sampai Proses Selesai</div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </div>
+</div>
 {% endblock %}

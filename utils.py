@@ -1,8 +1,19 @@
+import string
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 from io import StringIO
 import csv
+import re
+import pandas as pd
+
+from nltk.corpus import stopwords
+import re
+import string
+from nltk.stem import PorterStemmer
+import nltk
+nltk.download('punkt')
+nltk.download('stopwords')
 
 def format_tanggal(bulan):
     now = datetime.now()
@@ -12,20 +23,20 @@ def format_tanggal(bulan):
 def scrape_kompas(katakunci, jumlah):
     hasil_scraping = []
     for i in range(1, jumlah // 10 + 1):  # Ambil sesuai jumlah yang dimasukkan (10 berita per halaman)
-        url = f"https://indeks.kompas.com/?site=all&q={katakunci}&page={i}"
+        url = f"https://search.kompas.com/search/?q={katakunci}#gsc.tab=0&gsc.q={katakunci}&gsc.page={i}"
         response = requests.get(url)
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        articles = soup.find_all('div', class_='article__list clearfix')
+        articles = soup.find_all('div', class_='gsc-webResult gsc-result')
         for article in articles:
-            title = article.find('h3', class_='article__title--medium').text.strip()
-            link = article.find('a', class_='article__link')['href']
-            date = article.find('div', class_='article__date').text.strip()
+            title = article.find('div', class_='gs-title').text.strip()
+            link = article.find('a')['href']
+            date = article.find('div', class_='gs-bidi-start-align gs-visibleUrl gs-visibleUrl-breadcrumb').text.strip()
 
             # Scraping isi berita dari link
             content_response = requests.get(link)
             content_soup = BeautifulSoup(content_response.text, 'html.parser')
-            content_paragraphs = content_soup.find_all('div', class_='read__content')
+            content_paragraphs = content_soup.find_all('div', class_='gsc-table-result')
             content = ' '.join([p.text.strip() for p in content_paragraphs])
 
             data = {
@@ -41,8 +52,38 @@ def scrape_kompas(katakunci, jumlah):
 
     return hasil_scraping[:jumlah] 
 
+def scrape_tribun(katakunci, jumlah):
+    hasil_scraping = []
+    for i in range(1, jumlah // 10 + 1):  # Ambil sesuai jumlah yang dimasukkan (10 berita per halaman)
+        url = f"https://www.tribunnews.com/search?q={katakunci}&page={i}"
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
 
-def scrape_tribun(katakunci):
+        articles = soup.find_all('div', class_='gsc-resultsRoot gsc-tabData gsc-tabdActive')
+        for article in articles:
+            link = article.find('h3').find('a')['href']
+            title = article.find('h3').find('a')['gs-title']
+            date = article.find('div', class_='gs-bidi-start-align gs-snippet').text.strip()
+
+           # Scraping isi berita dari link
+            content_response = requests.get(link)
+            content_soup = BeautifulSoup(content_response.text, 'html.parser')
+            content_paragraphs = content_soup.find_all('div', class_='gsc-table-result')
+            content = ' '.join([p.text.strip() for p in content_paragraphs])
+
+            data = {
+                'title': title,
+                'date': date,
+                'link': link,
+                'content': content
+            }
+
+            hasil_scraping.append(data)
+            if len(hasil_scraping) >= jumlah:
+                break
+
+    return hasil_scraping[:jumlah] 
+
     hasil_scraping = []
     for i in range(1, 3):  # Ambil halaman 1 dan 2
         url = f"https://www.tribunnews.com/search?q={katakunci}&page={i}"
@@ -61,12 +102,12 @@ def scrape_tribun(katakunci):
 
             date = f"{time[1]}/{time[2]}/{time[3]} {time[4]} {time[5]}"
             link = article.find('h3').find('a')['href']
-            title = article.find('h3').find('a')['title']
+            title = article.find('h3').find('a')['gs-title']
 
             # Scraping isi berita dari link
             content_response = requests.get(link)
             content_soup = BeautifulSoup(content_response.text, 'html.parser')
-            content_paragraphs = content_soup.find_all('div', class_='side-article txt-article multi-fontsize')
+            content_paragraphs = content_soup.find_all('div', class_='gsc-table-result')
             content = ' '.join([p.text.strip() for p in content_paragraphs])
 
             data = {
@@ -77,9 +118,10 @@ def scrape_tribun(katakunci):
             }
 
             hasil_scraping.append(data)
-            print(data)  # Tambahkan pernyataan print di sini
+            if len(hasil_scraping) >= jumlah:
+                break # Tambahkan pernyataan print di sini
 
-    return hasil_scraping
+    return hasil_scraping[:jumlah]
 
 def scrape_detik(katakunci, jumlah):
     hasil_scraping = []
@@ -110,7 +152,44 @@ def scrape_detik(katakunci, jumlah):
                 'content': content
             }
 
+            hasil_scraping.append(data)
+            if len(hasil_scraping) >= jumlah:
+                break
 
+    return hasil_scraping[:jumlah]
+
+def scrape_tempo(katakunci, jumlah):
+    hasil_scraping = []
+
+    for page in range(1, jumlah // 10 + 1):
+        url = f'https://www.tempo.co/search?q={katakunci}&page={page}'
+
+        response = requests.get(url)
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        articles = soup.find_all('article', class_='text-card')
+        for article in articles:
+            link = article.find('a')['href']
+
+            title_container = article.find('h2', class_='title')
+            title = title_container.text.replace('\n', '').strip() if title_container else 'No title found'
+
+
+            date_container = article.find('h4', class_="date")
+            date = date_container.text.strip() if date_container else ''
+
+             # Scraping isi berita dari link
+            content_response = requests.get(link, verify=False)
+            content_soup = BeautifulSoup(content_response.text, 'html.parser')
+            content_paragraphs = content_soup.find_all('div', class_='detail-in')
+            content = ' '.join([p.text.strip() for p in content_paragraphs])
+
+            data = {
+                'title': title,
+                'date': date,
+                'link': link,
+                'content': content
+            }
 
             hasil_scraping.append(data)
             if len(hasil_scraping) >= jumlah:
@@ -119,25 +198,99 @@ def scrape_detik(katakunci, jumlah):
     return hasil_scraping[:jumlah]
 
 def generate_csv(data):
-    # Use the CSV module to create a CSV string from the data
-    csv_string = StringIO()  # Use StringIO as a file-like object
-
+    csv_string = StringIO()
     if data:
         # Create a CSV writer object
         csv_writer = csv.writer(csv_string)
 
         # Write header
-        header = ['Judul', 'Tanggal', 'Link', 'Isi Berita']
+        header = ['title', 'date', 'link', 'content']
         csv_writer.writerow(header)
 
         # Write data rows
         for item in data:
             csv_writer.writerow([item['title'], item['date'], item['link'], item['content']])
 
-    # Get the CSV content as a string
     csv_content = csv_string.getvalue()
-
-    # Close the StringIO object
     csv_string.close()
 
     return csv_content
+
+
+def generate_csv_processing(data):
+    csv_string = StringIO()  # Use StringIO as a file-like object
+
+    if data:
+        # Create a CSV writer object
+        csv_writer = csv.writer(csv_string)
+
+        header = ['title', 'date', 'link', 'content', 'text_tokenize', 'text_clean', 'label', 'score']
+        csv_writer.writerow(header)
+
+        # Write data rows
+        for item in data:
+            csv_writer.writerow([item['title'], item['date'], item['link'], item['content'], item['text_tokenize'], item['text_clean'], item['label'], item['score']])
+
+    csv_content_processing = csv_string.getvalue()
+    # Close the StringIO object
+    csv_string.close()
+
+    return csv_content_processing
+
+# Fungsi untuk tahap Cleansing
+def preprocessing(text):
+    # 1. Cleansing
+    text = clean_text(text)
+
+    # 2. Stopword Removal, Case Folding, Tokenizing
+    stop_words = set(stopwords.words('indonesian'))
+    words = nltk.word_tokenize(text)
+    words = [word.lower() for word in words if word.isalpha() and word.lower() not in stop_words]
+
+    # 3. Stemming
+    stemmer = PorterStemmer()
+    words = [stemmer.stem(word) for word in words]
+
+    return words
+
+def clean_text(text):
+    if isinstance(text, str):  # Check if the input is a string
+        text = text.lower()
+        text = re.sub('\[.*?\]', '', text)
+        text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
+        text = re.sub('\w*\d\w*', '', text)
+        text = re.sub('[‘’“”…]', '', text)
+        text = re.sub('\n', ' ', text)
+        return text 
+    else:
+        return str(text)
+
+
+
+class Labelling:
+    def __init__(self, dataset, lexicon_df):
+        self.dataset = dataset
+        self.lexicon_df = lexicon_df
+
+    def labelling_data(self):
+        df = pd.DataFrame(self.dataset)
+        df['label'], df['score'] = zip(*[self.label_lexicon(df['text_clean'][i]) for i in range(len(df))])
+        return df
+
+    def label_lexicon(self, text):
+        words = text.split()
+        labels = []
+
+        for word in words:
+            label = self.lexicon_df.loc[self.lexicon_df['word'] == word, 'weight'].values
+            if len(label) > 0:
+                labels.append(label[0])
+
+        sentiment_score = sum(labels)
+        if sentiment_score > 0:
+            return 'Positive', sentiment_score
+        elif sentiment_score < 0:
+            return 'Negative', sentiment_score
+        else:
+            return 'Netral', sentiment_score
+
