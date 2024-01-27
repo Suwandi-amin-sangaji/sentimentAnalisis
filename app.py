@@ -4,6 +4,7 @@ import pandas as pd
 import os
 from utils import preprocessing, Labelling, clean_text
 
+from sklearn.svm import SVC
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
@@ -21,6 +22,8 @@ scraped_data = []
 hasil_processing = []
 vectorizer = TfidfVectorizer()
 df_labeled = pd.DataFrame()
+# Initialize the SVM model and TfidfVectorizer
+svm_model = SVC(kernel='linear')
 
 @app.route("/")
 def index():
@@ -134,21 +137,21 @@ def hasil_sentimen():
 
     if df_labeled.empty:
         df_labeled = pd.DataFrame(hasil_processing)
-        X = vectorizer.fit_transform(df_labeled['text_clean'])
+        X = vectorizer.fit_transform(df_labeled['title'])
         y = df_labeled['label']
         knn_model.fit(X, y)
     try:
         text_vectorized = vectorizer.transform(["dummy text"])
     except AttributeError:
         df_labeled = pd.DataFrame(hasil_processing)
-        X = vectorizer.fit_transform(df_labeled['text_clean'])
+        X = vectorizer.fit_transform(df_labeled['title'])
         y = df_labeled['label']
         knn_model.fit(X, y)
 
     hasil_sentimen = []
     actual_labels = []
     for data in hasil_processing:
-        text_vectorized = vectorizer.transform([data['text_clean']])
+        text_vectorized = vectorizer.transform([data['title']])
         prediction = knn_model.predict(text_vectorized)[0]
         hasil_sentimen.append({'title': data['title'], 'sentiment': prediction})
         actual_labels.append(data['label'])
@@ -209,7 +212,37 @@ def hasil_sentimen():
 
 @app.route('/svm')
 def svm():
-    return render_template('svm.html')
+    global hasil_processing, vectorizer, knn_model, df_labeled
+
+    if df_labeled.empty:
+        df_labeled = pd.DataFrame(hasil_processing)
+        X = vectorizer.fit_transform(df_labeled['title'])
+        y = df_labeled['label']
+        knn_model.fit(X, y)
+    try:
+        text_vectorized = vectorizer.transform(["dummy text"])
+    except AttributeError:
+        df_labeled = pd.DataFrame(hasil_processing)
+        X = vectorizer.transform(df_labeled['title'])
+        y = df_labeled['label']
+        # Train the SVM model
+        svm_model.fit(X, y)
+
+    hasil_sentimen = []
+    actual_labels = []
+    for data in hasil_processing:
+        text_vectorized = vectorizer.transform([data['title']])
+        prediction = knn_model.predict(text_vectorized)[0]
+        hasil_sentimen.append({'title': data['title'], 'sentiment': prediction})
+        actual_labels.append(data['label'])
+
+    cm = confusion_matrix(actual_labels, [result['sentiment'] for result in hasil_sentimen])
+    accuracy = accuracy_score(actual_labels, [result['sentiment'] for result in hasil_sentimen])
+    precision = precision_score(actual_labels, [result['sentiment'] for result in hasil_sentimen], average='weighted')
+    recall = recall_score(actual_labels, [result['sentiment'] for result in hasil_sentimen], average='weighted')
+    f1 = f1_score(actual_labels, [result['sentiment'] for result in hasil_sentimen], average='weighted')
+
+    return render_template('svm.html', hasil_sentimen=hasil_sentimen, confusion_matrix=cm,accuracy=accuracy, precision=precision, recall=recall, f1=f1)
 
 
 @app.route('/hasil')

@@ -273,7 +273,7 @@ class Labelling:
 
     def labelling_data(self):
         df = pd.DataFrame(self.dataset)
-        df['label'], df['score'] = zip(*[self.label_lexicon(df['text_clean'][i]) for i in range(len(df))])
+        df['label'], df['score'] = zip(*[self.label_lexicon(df['title'][i]) for i in range(len(df))])
         return df
 
     def label_lexicon(self, text):
