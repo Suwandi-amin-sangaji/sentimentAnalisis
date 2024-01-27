@@ -197,9 +197,9 @@ def scrape_tempo(katakunci, jumlah):
 
     return hasil_scraping[:jumlah]
 
-def generate_csv(data):
+def generate_csv(scraped_data):
     csv_string = StringIO()
-    if data:
+    if scraped_data:
         # Create a CSV writer object
         csv_writer = csv.writer(csv_string)
 
@@ -208,7 +208,7 @@ def generate_csv(data):
         csv_writer.writerow(header)
 
         # Write data rows
-        for item in data:
+        for item in scraped_data:
             csv_writer.writerow([item['title'], item['date'], item['link'], item['content']])
 
     csv_content = csv_string.getvalue()
@@ -232,7 +232,6 @@ def generate_csv_processing(data):
             csv_writer.writerow([item['title'], item['date'], item['link'], item['content'], item['text_tokenize'], item['text_clean'], item['label'], item['score']])
 
     csv_content_processing = csv_string.getvalue()
-    # Close the StringIO object
     csv_string.close()
 
     return csv_content_processing
@@ -256,12 +255,12 @@ def preprocessing(text):
 def clean_text(text):
     if isinstance(text, str):  # Check if the input is a string
         text = text.lower()
-        text = re.sub('\[.*?\]', '', text)
-        text = re.sub('[%s]' % re.escape(string.punctuation), '', text)
-        text = re.sub('\w*\d\w*', '', text)
-        text = re.sub('[‘’“”…]', '', text)
-        text = re.sub('\n', ' ', text)
-        return text 
+        text = re.sub(r'\[.*?\]', '', text)  # Use raw string literal
+        text = re.sub(r'[%s]' % re.escape(string.punctuation), '', text)
+        text = re.sub(r'\w*\d\w*', '', text)
+        text = re.sub(r'[‘’“”…]', '', text)  # Use raw string literal
+        text = re.sub(r'\n', ' ', text)
+        return text
     else:
         return str(text)
 

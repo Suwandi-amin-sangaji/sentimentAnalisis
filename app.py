@@ -10,10 +10,13 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
 
 from wordcloud import WordCloud
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 app = Flask(__name__)
 global scraped_data
+global hasil_processing
 scraped_data = []
 hasil_processing = []
 vectorizer = TfidfVectorizer()
@@ -25,6 +28,7 @@ def index():
 
 @app.route('/submit', methods=['POST'])
 def submit_form():
+    global scraped_data
     source = request.form.get('source')
     kata_kunci = request.form.get('Kata Kunci')
     jumlah = int(request.form.get('Jumlah', 10))  # Nilai default adalah 10 jika tidak ada input
@@ -38,15 +42,19 @@ def submit_form():
     elif source == 'kompas':
         scraped_data  = scrape_kompas(kata_kunci, jumlah)
 
-    return render_template('scraping.html', data=scraped_data )
+    return render_template('scraping.html', data=scraped_data)
 
 @app.route("/scraping")
 def route_scraping():
+    global scraped_data  # Use the global keyword to refer to the global variable
     return render_template('scraping.html', data=scraped_data)
-
 
 @app.route('/download', methods=['POST'])
 def download():
+    global scraped_data
+    if not scraped_data:
+        return "Error: No scraped data available."
+
     csv_data = generate_csv(scraped_data)
     response = Response(
         csv_data,
@@ -58,6 +66,7 @@ def download():
 
 @app.route("/processing")
 def processing():
+    global hasil_processing
     return render_template('processingData.html', data=hasil_processing)
 
 @app.route('/process', methods=['POST'])
@@ -81,12 +90,12 @@ def process():
 
 @app.route('/download_processing', methods=['POST'])
 def download_processing():
+    global hasil_processing
     # Generate CSV data
-    csv_data = generate_csv_processing(hasil_processing)
+    csv_data_processing = generate_csv_processing(hasil_processing)
 
-    # Create a response with the CSV data
     response = Response(
-        csv_data,
+        csv_data_processing,
         content_type='text/csv',
         headers={'Content-Disposition': 'attachment; filename=Hasil_Processing.csv'}
     )
@@ -153,7 +162,7 @@ def hasil_sentimen():
     # Create Word Cloud
     all_text = ' '.join(df_labeled['text_clean'])
     wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(18, 10))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis('off')
 
@@ -167,12 +176,22 @@ def hasil_sentimen():
     plt.close()
 
     # Create Pie Chart
-    labels = ['Positive', 'Neutral', 'Negative']
-    sizes = [cm[0, 0], cm[1, 1], cm[2, 2]]
+    labels = ['Negative', 'Neutral', 'Positive']
+
+    # Determine the number of classes in the confusion matrix
+    num_classes = cm.shape[0]
+
+    # Set sizes based on the number of classes
+    sizes = [cm[i, i] if i < num_classes else 0 for i in range(len(labels))]
+
     explode = (0.1, 0, 0)  # explode the 1st slice (Positive)
+
+    # Set custom colors for each sentiment class
+    colors = ['red', 'orange', 'green']
+
     fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
-    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90, colors=colors)
+    ax1.axis('equal')  # Equal aspect ratio ensures that the pie chart is drawn as a circle.
 
     # Ensure the 'static/image' directory exists
     image_dir = 'static/image'
@@ -181,10 +200,12 @@ def hasil_sentimen():
     # Save the Pie Chart image
     pie_chart_path = os.path.join(image_dir, 'pie_chart.png')
     plt.savefig(pie_chart_path)
-    plt.close()
+    plt.close('all')
 
     return render_template('knn.html', hasil_sentimen=hasil_sentimen, confusion_matrix=cm,
-                           accuracy=accuracy, precision=precision, recall=recall, f1=f1, wordcloud_path=wordcloud_path, pie_chart_path=pie_chart_path)
+                        accuracy=accuracy, precision=precision, recall=recall, f1=f1, wordcloud_path=wordcloud_path, pie_chart_path=pie_chart_path)
+
+
 
 @app.route('/svm')
 def svm():
@@ -195,5 +216,6 @@ def svm():
 def hasil():
     return render_template('hasil.html')
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(debug=True, use_reloader=False)
+
