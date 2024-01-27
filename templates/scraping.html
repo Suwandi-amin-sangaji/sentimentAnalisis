@@ -38,7 +38,7 @@
                             <select class="form-select" id="sourceDropdown" name="source">
                                 <option value="detik">Detik.com</option>
                                 <option value="kompas">Kompas</option>
-                                <option value="tribun">Tribun</option> 
+                                <option value="tribun">Tribun</option>
                                 <option value="tempo">Tempo.co</option>
                             </select>
                         </div>
@@ -71,48 +71,51 @@
                         <div class="card-body">
                             <form action="{{ url_for('download') }}" method="POST">
                                 <!-- Tambahkan elemen formulir yang diperlukan di sini -->
-                                <button type="submit" class="btn btn-danger mb-3"><i class="bx bx-download"></i> Download</button>
+                                <button type="submit" class="btn btn-danger mb-3"><i class="bx bx-download"></i>
+                                    Download</button>
                             </form>
-                            <table id="example" class="table table-bordered table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>Judul</th>
-                                        <th>Tanggal</th>
-                                        <th>Link</th>
-                                        <th>Isi Berita</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for item in data %}
-                                    <tr>
-                                        <td>{{ item['title'] }}</td>
-                                        <td>{{ item['date'] }}</td>
-                                        <td>{{ item['link'] }}</td>
-                                        <td>
-                                            <div class="content-preview">{{ item['content'] }}</div>
-                                            <span class="read-more-btn" onclick="readMore(this)">Read more</span>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                                <div class="table-responsive table-bordered">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Judul</th>
+                                                <th>Tanggal</th>
+                                                <th>Link</th>
+                                                <th>Isi Berita</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in data %}
+                                            <tr>
+                                                <td>{{ item['title'] }}</td>
+                                                <td>{{ item['date'] }}</td>
+                                                <td>{{ item['link'] }}</td>
+                                                <td>
+                                                    <div class="content-preview">{{ item['content'] }}</div>
+                                                    <span class="read-more-btn" onclick="readMore(this)">Read
+                                                        more</span>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            {% else %}
+                            <p class="text-center">Belum ada scraping yang dilakukan.</p>
+                            {% endif %}
+
                         </div>
-                        {% else %}
-                        <p class="text-center">Belum ada scraping yang dilakukan.</p>
-                        {% endif %}
+                        <div id="loading" class="loading-overlay">
+                            <div class="loading-content">
+                                <div class="loading-spinner"></div>
+                                <div class="loading-text">Membuatuhkan Waktu, Mohon Menunggu Sampai Proses Selesai</div>
+                            </div>
+                        </div>
 
                     </div>
-                    <div id="loading" class="loading-overlay">
-                        <div class="loading-content">
-                            <div class="loading-spinner"></div>
-                            <div class="loading-text">Membuatuhkan Waktu, Mohon Menunggu Sampai Proses Selesai</div>
-                        </div>
-                    </div>
-                    
                 </div>
             </div>
         </div>
     </div>
-</div>
-</div>
-{% endblock %}
+    {% endblock %}
