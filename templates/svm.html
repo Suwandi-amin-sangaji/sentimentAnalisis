@@ -2,40 +2,146 @@
 
 {% block content %}
 <div class="container-xxl flex-grow-1 container-p-y">
-    <div class="row">
-      <div class="col-lg-12 mb-4 order-0">
-        <div class="card">
-          <div class="d-flex align-items-end row">
-            <div class="col-sm-7">
-              <div class="card-body">
-                <h5 class="card-title text-primary">
-                  Algoritma SVM 🎉
-                </h5>
-                <p class="mb-4">
-                 Svm Adalah algoritma machine learning yang digunakan untuk menyelesaikan masalah klasifikasi.
-                </p>
+  <div class="row">
+    <div class="col-lg-12 mb-4 order-0">
+      <div class="card">
+        <div class="d-flex align-items-end row">
+          <div class="col-sm-7">
+            <div class="card-body">
+              <h5 class="card-title text-primary">
+                Algoritma SVM 🎉
+              </h5>
+              <p class="mb-4">
+                Svm Adalah algoritma machine learning yang digunakan untuk menyelesaikan masalah klasifikasi.
+              </p>
 
-                <a
-                  href="javascript:;"
-                  class="btn btn-sm btn-outline-primary"
-                  >Mulai</a
-                >
-              </div>
+              <form action="{{ url_for('svm') }}" method="post" enctype="multipart/form-data">
+                <div class="form-group">
+                  <label for="file">Masukkan File CSV Hasil Processing Data</label>
+                  <input type="file" class="form-control" id="file" name="file" accept=".csv" required>
+                </div>
+                <br>
+                <div class="form-group">
+                  <label for="n_svm">Pilih Karnel Model SVM</label>
+                  <select class="form-select" id="svmDropdown" name="svmKarnel">
+                    <option value="linear">Linear</option>
+                    <option value="poly">Polynomial</option>
+                    <option value="sigmoid">Sigmoid</option>
+                    <option value="rbf">RBF (Radial Basis Function)</option>
+                  </select>
+                </div>
+                <br>
+                <div class="form-group">
+                  <label for="split_ratio">Masukkan Split Ratio</label>
+                  <input type="number" class="form-control" id="split_ratio" name="split_ratio" min="0" max="1"
+                    step="0.1" required value="0.2">
+                </div>
+                <br>
+                <button type="submit" class="btn btn-sm btn-outline-primary">Analisis</button>
+              </form>
             </div>
-            <div class="col-sm-5 text-center text-sm-left">
-              <div class="card-body pb-0 px-0 px-md-4">
-                <img
-                  src="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
-                  height="140"
-                  alt="View Badge User"
-                  data-app-dark-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-dark.png')}}"
-                  data-app-light-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
-                />
-              </div>
+          </div>
+          <div class="col-sm-5 text-center text-sm-left">
+            <div class="card-body pb-0 px-0 px-md-4">
+              <img src="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
+                height="140" alt="View Badge User"
+                data-app-dark-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-dark.png')}}"
+                data-app-light-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}" />
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <div id="loading" class="loading-overlay">
+      <div class="loading-content">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Membuatuhkan Waktu, Mohon Menunggu Sampai Proses Selesai</div>
+      </div>
+    </div>
+
+    <h1 class="text-center">Hasil Analisis Sentimen</h1>
+    {% if hasil_sentimen_svm %}
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Accuracy</th>
+            <th>Precision</th>
+            <th>Recall</th>
+            <th>F1 Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ accuracy }}</td>
+            <td>{{ precision }}</td>
+            <td>{{ recall }}</td>
+            <td>{{ f1 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Sentiment</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in hasil_sentimen_svm %}
+          <tr>
+            <td>{{ result['title'] }}</td>
+            <td>
+              {% if result['sentiment'] == 'Positive' %}
+              <span class="badge bg-label-success">{{ result['sentiment'] }}</span>
+              {% elif result['sentiment'] == 'Negative' %}
+              <span class="badge bg-label-danger">{{ result['sentiment'] }}</span>
+              {% else %}
+              <span class="badge bg-label-warning">{{ result['sentiment'] }}</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="container">
+      <div class="row">
+    
+        <div class="col-md-6 col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Wordcloud</h5>
+            </div>
+            <div class="card-body">
+              
+              <img src="{{ url_for('static', filename='image/svm/wordcloud_svm.png') }}" alt="Word Cloud" width="100%">
+            </div>
+          </div>
+        </div>
+
+      
+        <div class="col-md-6 col-12">
+          <div class="card">
+            <div class="card-header">
+              <h5 class="card-title">Pie Chart</h5>
+            </div>
+            <div class="card-body">
+            
+              <img src="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}" alt="Pie Chart" width="100%">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% else %}
+    <p class="text-center">Belum Ada Hasil.</p>
+    {% endif %}
   </div>
+</div>
 {% endblock %}

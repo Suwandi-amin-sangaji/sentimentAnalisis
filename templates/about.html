@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-xxl flex-grow-1 container-p-y">
+    <div class="row">
+        <div class="col-lg-12 mb-4 order-0">
+            <div class="card">
+                <div class="d-flex align-items-end row">
+                    <div class="col-sm-7">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">
+                                About 🎉
+                            </h5>
+                            <p class="mb-4">
+                                Aplikasi sentiment Analisis Berita ini adalah aplikasi berbasis web yang dibuat untuk
+                                mempermudah proses analisis sentimen pada berita berita dalam mengidentifikasi sentimen.
+                            </p>
+
+                            <!-- <a href="/" class="btn btn-sm btn-outline-primary">Mulai</a> -->
+                        </div>
+                    </div>
+                    <div class="col-sm-5 text-center text-sm-left">
+                        <div class="card-body pb-0 px-0 px-md-4">
+                            <img src="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}"
+                                height="140" alt="View Badge User"
+                                data-app-dark-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-dark.png')}}"
+                                data-app-light-img="{{url_for('static', filename='assets/img/illustrations/man-with-laptop-light.png')}}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="row">
+                        <div class="col-lg-12 mb-4 order-0">
+                            <div class="d-flex align-items-end row">
+                                <div class="accordion mt-3" id="accordionExample">
+                                    <div class="card accordion-item active">
+                                        <h2 class="accordion-header" id="headingOne">
+                                            <button type="button" class="accordion-button" data-bs-toggle="collapse"
+                                                data-bs-target="#accordionOne" aria-expanded="true"
+                                                aria-controls="accordionOne">
+                                                Apa itu Sentiment Analysis ?
+                                            </button>
+                                        </h2>
+
+                                        <div id="accordionOne" class="accordion-collapse collapse show"
+                                            data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <strong>Sentiment Analysis,</strong><p>juga dikenal sebagai penambangan opini, adalah proses menentukan
+                                                    sentimen atau nada emosional yang diungkapkan dalam sepotong teks.
+                                                    Ini melibatkan menganalisis data teks untuk mengidentifikasi dan
+                                                    mengklasifikasikan opini, sikap, atau emosi sebagai positif,
+                                                    negatif, atau netral.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card accordion-item">
+                                        <h2 class="accordion-header" id="headingTwo">
+                                            <button type="button" class="accordion-button collapsed"
+                                                data-bs-toggle="collapse" data-bs-target="#accordionTwo"
+                                                aria-expanded="false" aria-controls="accordionTwo">
+                                                Bagaimana Analisis Sentimen Bekerja ?
+                                            </button>
+                                        </h2>
+                                        <div id="accordionTwo" class="accordion-collapse collapse"
+                                            aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                Analisis Sentimen bekerja dengan menggunakan pemrosesan bahasa alami
+                                                (NLP) dan teknik pembelajaran mesin untuk menganalisis dan
+                                                menginterpretasi sentimen dari data teks.
+                                                Ini melibatkan berbagai langkah, termasuk pra-pemrosesan teks, ekstraksi
+                                                fitur, dan klasifikasi menggunakan algoritma untuk menentukan sentimen.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card accordion-item">
+                                        <h2 class="accordion-header" id="headingThree">
+                                            <button type="button" class="accordion-button collapsed"
+                                                data-bs-toggle="collapse" data-bs-target="#accordionThree"
+                                                aria-expanded="false" aria-controls="accordionThree">
+                                                Aplikasi Analisis Sentimen
+                                            </button>
+                                        </h2>
+                                        <div id="accordionThree" class="accordion-collapse collapse"
+                                            aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                Analisis Sentimen memiliki berbagai aplikasi, termasuk pemantauan media
+                                                sosial, analisis umpan balik pelanggan, pemantauan merek, dan riset
+                                                pasar.
+                                                Ini membantu bisnis dan organisasi memahami opini publik, meningkatkan
+                                                kepuasan pelanggan, dan membuat keputusan berbasis data.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card accordion-item">
+                                        <h2 class="accordion-header" id="headingFour">
+                                            <button type="button" class="accordion-button collapsed"
+                                                data-bs-toggle="collapse" data-bs-target="#accordionFour"
+                                                aria-expanded="false" aria-controls="accordionFour">
+                                                Tentang Studi Kasus: Analisis Sentimen Berita Rohingya
+                                            </button>
+                                        </h2>
+                                        <div id="accordionFour" class="accordion-collapse collapse"
+                                            aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                            <div class="accordion-body">
+                                                <p>
+                                                    Studi kasus ini bertujuan untuk menganalisis sentimen berita terkait
+                                                    krisis Rohingya menggunakan metode K-Nearest Neighbors (KNN) dan
+                                                    Support Vector Machine (SVM).
+                                                    Krisis kemanusiaan di Rakhine State, Myanmar, telah menarik
+                                                    perhatian dunia dan banyak berita yang dilaporkan memuat sentimen
+                                                    yang beragam.
+                                                    Analisis sentimen membantu dalam memahami pandangan publik dan
+                                                    perasaan yang terkandung dalam berita tersebut.
+                                                </p>
+
+                                                <h5>Metode Analisis</h5>
+                                                <p>
+                                                    Dalam studi kasus ini, kami menggunakan K-Nearest Neighbors (KNN)
+                                                    dan Support Vector Machine (SVM) sebagai metode analisis sentimen.
+                                                    KNN digunakan untuk klasifikasi berbasis tetangga terdekat,
+                                                    sementara SVM digunakan untuk klasifikasi berbasis hyperplane.
+                                                    Kedua metode ini dapat memberikan hasil yang akurat dalam membedakan
+                                                    sentimen positif, negatif, dan netral.
+                                                </p>
+
+                                                <h5>Data dan Preprocessing</h5>
+                                                <p>
+                                                    Data berita yang digunakan dalam studi kasus ini dikumpulkan dari
+                                                    sumber-sumber berita terpercaya yang melaporkan berita seputar
+                                                    krisis Rohingya.
+                                                    Proses preprocessing melibatkan langkah-langkah seperti tokenisasi,
+                                                    pembersihan teks, dan pembuatan fitur berbasis teks untuk mendukung
+                                                    analisis sentimen.
+                                                </p>
+
+                                                <h5>Hasil dan Evaluasi</h5>
+                                                <p>
+                                                    Hasil dari analisis sentimen akan memberikan pemahaman tentang
+                                                    bagaimana berita-berita terkait Rohingya diinterpretasikan oleh
+                                                    algoritma KNN dan SVM.
+                                                    Evaluasi termasuk metrik-metrik seperti akurasi, presisi, recall,
+                                                    dan F1-score untuk mengukur performa model dalam mengklasifikasikan
+                                                    sentimen.
+                                                </p>
+
+                                                <h5>Aplikasi Praktis</h5>
+                                                <p>
+                                                    Studi kasus ini memiliki aplikasi praktis dalam mendukung pemantauan
+                                                    media, analisis opini publik, dan pemahaman terhadap pandangan
+                                                    masyarakat terkait krisis Rohingya.
+                                                    Informasi ini dapat bermanfaat bagi pemangku kepentingan, peneliti,
+                                                    dan organisasi yang peduli dengan isu kemanusiaan.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

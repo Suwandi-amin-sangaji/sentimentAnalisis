@@ -130,7 +130,7 @@ def scrape_detik(katakunci, jumlah):
     for page in range(1, jumlah // 10 + 1):
         url = f'https://www.detik.com/search/searchall?query={katakunci}&siteid=2&page={page}'
         
-        response = requests.get(url, verify=False)
+        response = requests.get(url, verify=True)
         soup = BeautifulSoup(response.text, 'html.parser')
 
         articles = soup.find_all('article')
@@ -164,7 +164,7 @@ def scrape_tempo(katakunci, jumlah):
     for page in range(1, jumlah // 10 + 1):
         url = f'https://www.tempo.co/search?q={katakunci}&page={page}'
 
-        response = requests.get(url)
+        response = requests.get(url, verify=True)
         soup = BeautifulSoup(response.text, 'html.parser')
 
         articles = soup.find_all('article', class_='text-card')
