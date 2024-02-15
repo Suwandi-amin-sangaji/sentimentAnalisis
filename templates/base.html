@@ -38,13 +38,13 @@
     href="{{url_for('static', filename='assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')}}" />
 
   <link rel="stylesheet" href="{{url_for('static',
-    filename='assets/vendor/libs/apex-charts/apex-charts.css')}}"" />
+    filename='assets/vendor/libs/apex-charts/apex-charts.css')}}" />
 
-    <!-- Tambahkan stylesheet DataTables -->
-    <link href=" https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.css" rel="stylesheet">
+  <!-- Tambahkan stylesheet DataTables -->
+  <!-- <link href="{{url_for('static', filename='assets/DataTables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
 
-  <script src="https://cdn.datatables.net/v/dt/dt-1.13.8/datatables.min.js"></script>
-
+  <script src="{{url_for('static', filename='assets/DataTables/js/dataTables.bootstrap.min.js')}}"></script> -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
 
 
   <!-- Helpers -->
@@ -54,6 +54,8 @@
   <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="{{url_for('static', filename='assets/js/config.js')}}"></script>
+
+
 
   <style>
     .content-preview {
@@ -234,12 +236,12 @@
               </li>
             </ul>
           </li>
-          <!-- <li class="menu-item">
-            <a href="about" class="menu-link">
+          <li class="menu-item">
+            <a href="hasil" class="menu-link">
               <i class="menu-icon tf-icons bx bx-detail"></i>
-              <div data-i18n="Basic">About</div>
+              <div data-i18n="Basic">Hasil</div>
             </a>
-          </li> -->
+          </li>
         </ul>
       </aside>
       <!-- / Menu -->
@@ -256,7 +258,7 @@
             </a>
           </div>
           <ul class="navbar-nav flex-row align-items-center ms-auto">
-           
+
             <li class="nav-item lh-1 me-3">
               <a class="github-button" href="https://github.com/Suwandi-amin-sangaji/sentimentAnalisis"
                 data-icon="octicon-star" data-size="large" data-show-count="true"
@@ -267,7 +269,7 @@
               <a href="about" type="button" class="btn btn-icon btn-outline-primary btn-sm">
                 <span class="bx bx-info-circle"></span>
               </a>
-             </li>
+            </li>
           </ul>
         </nav>
         <!-- / Navbar -->
@@ -287,18 +289,13 @@
     <div class="layout-overlay layout-menu-toggle"></div>
   </div>
 
-
-  <!-- datatable -->
-
-  <!-- Inisialisasi DataTables -->
-  <!-- Add DataTables JS -->
-  <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>
-
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src=" https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
   <script>
-    $(document).ready(function () {
-      $('#example').DataTable();
-    });
+    new DataTable('#example');
   </script>
+
+
 
   <script>
     function readMore(element) {
@@ -330,7 +327,6 @@
   <script src="https://cdn.jsdelivr.net/npm/wordcloud@2.0.4"></script>
   <!-- build:js assets/vendor/js/core.js -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
   <script src="{{url_for('static', filename='assets/vendor/libs/popper/popper.js')}}"></script>
   <script src="{{url_for('static', filename='assets/vendor/js/bootstrap.js')}}"></script>
   <script src="{{url_for('static', filename='assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')}}"></script>
