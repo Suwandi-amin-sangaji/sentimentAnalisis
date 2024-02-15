@@ -348,25 +348,33 @@ def hasil():
 
     # Memeriksa apakah model KNN sudah didefinisikan
     if 'knn_model' not in globals():
-        hasil_knn = None
-        cm_knn = None
-        accuracy_knn = None
-        precision_knn = None
-        recall_knn = None
-        f1_knn = None
+        hasil_knn = ''
+        cm_knn = ''
+        accuracy_knn = ''
+        precision_knn = ''
+        recall_knn = ''
+        f1_knn = ''
     else:
-        hasil_knn = []
-        actual_labels_knn = []
-        for data in hasil_processing:
-            text_vectorized = vectorizer.transform([data['title']])
-            prediction = knn_model.predict(text_vectorized)[0]
-            hasil_knn.append({'title': data['title'], 'sentiment': prediction})
-            actual_labels_knn.append(data['label'])
-        cm_knn = confusion_matrix(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
-        accuracy_knn = accuracy_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
-        precision_knn = precision_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
-        recall_knn = recall_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
-        f1_knn = f1_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+        try:
+            hasil_knn = []
+            actual_labels_knn = []
+            for data in hasil_processing:
+                text_vectorized = vectorizer.transform([data['title']])
+                prediction = knn_model.predict(text_vectorized)[0]
+                hasil_knn.append({'title': data['title'], 'sentiment': prediction})
+                actual_labels_knn.append(data['label'])
+            cm_knn = confusion_matrix(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
+            accuracy_knn = accuracy_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
+            precision_knn = precision_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+            recall_knn = recall_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+            f1_knn = f1_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+        except:
+            hasil_knn = ''
+            cm_knn = ''
+            accuracy_knn = ''
+            precision_knn = ''
+            recall_knn = ''
+            f1_knn = ''
 
     # Memeriksa apakah model SVM sudah didefinisikan
     if 'svm_model' not in globals():
@@ -377,24 +385,33 @@ def hasil():
         recall_svm = ''
         f1_svm = ''
     else:
-        hasil_svm = []
-        actual_labels_svm = []
-        for data in hasil_processing:
-            text_vectorized = vectorizer.transform([data['title']])
-            prediction = svm_model.predict(text_vectorized)[0]
-            hasil_svm.append({'title': data['title'], 'sentiment': prediction})
-            actual_labels_svm.append(data['label'])
-        cm_svm = confusion_matrix(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
-        accuracy_svm = accuracy_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
-        precision_svm = precision_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
-        recall_svm = recall_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
-        f1_svm = f1_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+        try:
+            hasil_svm = []
+            actual_labels_svm = []
+            for data in hasil_processing:
+                text_vectorized = vectorizer.transform([data['title']])
+                prediction = svm_model.predict(text_vectorized)[0]
+                hasil_svm.append({'title': data['title'], 'sentiment': prediction})
+                actual_labels_svm.append(data['label'])
+            cm_svm = confusion_matrix(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
+            accuracy_svm = accuracy_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
+            precision_svm = precision_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+            recall_svm = recall_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+            f1_svm = f1_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+        except:
+            hasil_svm = ''
+            cm_svm = ''
+            accuracy_svm = ''
+            precision_svm = ''
+            recall_svm = ''
+            f1_svm = ''
 
     return render_template('hasil.html', 
                            hasil_knn=hasil_knn, cm_knn=cm_knn, accuracy_knn=accuracy_knn, 
                            precision_knn=precision_knn, recall_knn=recall_knn, f1_knn=f1_knn, 
                            hasil_svm=hasil_svm, cm_svm=cm_svm, accuracy_svm=accuracy_svm, 
                            precision_svm=precision_svm, recall_svm=recall_svm, f1_svm=f1_svm)
+
 
 
 
