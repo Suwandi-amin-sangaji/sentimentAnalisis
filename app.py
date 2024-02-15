@@ -341,81 +341,61 @@ def about():
     return render_template('about.html')
 
 
+
 @app.route('/hasil')
 def hasil():
-    global hasil_processing, vectorizer, svm_model,df_labeled
+    global svm_model, knn_model, hasil_processing
 
-    if df_labeled.empty:
-            df_labeled = pd.DataFrame(hasil_processing)
-            X = vectorizer.fit_transform(df_labeled['title'])
-            y = df_labeled['label']
-            svm_model.fit(X, y)
-    try:
-        text_vectorized = vectorizer.transform(["dummy text"])
-    except AttributeError:
-        df_labeled = pd.DataFrame(hasil_processing)
-        X = vectorizer.fit_transform(df_labeled['title'])
-        y = df_labeled['label']
-        svm_model.fit(X, y)
+    # Memeriksa apakah model KNN sudah didefinisikan
+    if 'knn_model' not in globals():
+        hasil_knn = None
+        cm_knn = None
+        accuracy_knn = None
+        precision_knn = None
+        recall_knn = None
+        f1_knn = None
+    else:
+        hasil_knn = []
+        actual_labels_knn = []
+        for data in hasil_processing:
+            text_vectorized = vectorizer.transform([data['title']])
+            prediction = knn_model.predict(text_vectorized)[0]
+            hasil_knn.append({'title': data['title'], 'sentiment': prediction})
+            actual_labels_knn.append(data['label'])
+        cm_knn = confusion_matrix(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
+        accuracy_knn = accuracy_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
+        precision_knn = precision_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+        recall_knn = recall_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+        f1_knn = f1_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
 
-    hasil_sentimen_svm = []
-    actual_labels = []
+    # Memeriksa apakah model SVM sudah didefinisikan
+    if 'svm_model' not in globals():
+        hasil_svm = ''
+        cm_svm = ''
+        accuracy_svm = ''
+        precision_svm = ''
+        recall_svm = ''
+        f1_svm = ''
+    else:
+        hasil_svm = []
+        actual_labels_svm = []
+        for data in hasil_processing:
+            text_vectorized = vectorizer.transform([data['title']])
+            prediction = svm_model.predict(text_vectorized)[0]
+            hasil_svm.append({'title': data['title'], 'sentiment': prediction})
+            actual_labels_svm.append(data['label'])
+        cm_svm = confusion_matrix(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
+        accuracy_svm = accuracy_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
+        precision_svm = precision_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+        recall_svm = recall_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+        f1_svm = f1_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
 
-    for data in hasil_processing:
-        text_vectorized = vectorizer.transform([data['title']])
-        prediction = svm_model.predict(text_vectorized)[0]
-        hasil_sentimen_svm.append({'title': data['title'], 'sentiment': prediction})
-        actual_labels.append(data['label'])
+    return render_template('hasil.html', 
+                           hasil_knn=hasil_knn, cm_knn=cm_knn, accuracy_knn=accuracy_knn, 
+                           precision_knn=precision_knn, recall_knn=recall_knn, f1_knn=f1_knn, 
+                           hasil_svm=hasil_svm, cm_svm=cm_svm, accuracy_svm=accuracy_svm, 
+                           precision_svm=precision_svm, recall_svm=recall_svm, f1_svm=f1_svm)
 
-    cm = confusion_matrix(actual_labels, [prediction_result['sentiment'] for prediction_result in hasil_sentimen_svm])
-    accuracy = accuracy_score(actual_labels, [prediction_result['sentiment'] for prediction_result in hasil_sentimen_svm])
-    precision = precision_score(actual_labels, [prediction_result['sentiment'] for prediction_result in hasil_sentimen_svm], average='weighted')
-    recall = recall_score(actual_labels, [prediction_result['sentiment'] for prediction_result in hasil_sentimen_svm], average='weighted')
-    f1 = f1_score(actual_labels, [prediction_result['sentiment'] for prediction_result in hasil_sentimen_svm], average='weighted')
-
-    all_text = ' '.join(df_labeled['title'])
-    wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
-    plt.figure(figsize=(18, 10))
-    plt.imshow(wordcloud, interpolation='bilinear')
-    plt.axis('off')
-
-    # Ensure the 'static/image/svm' directory exists
-    image_dir = 'static/image/svm'
-    os.makedirs(image_dir, exist_ok=True)
-
-    # Save the Word Cloud image
-    wordcloud_path = os.path.join(image_dir, 'wordcloud_svm.png')
-    plt.savefig(wordcloud_path)
-    plt.close()
-
-    # Create Pie Chart
-    labels = ['Negative', 'Neutral', 'Positive']
-
-    # Determine the number of classes in the confusion matrix
-    num_classes = cm.shape[0]
-
-    # Set sizes based on the number of classes
-    sizes = [cm[i, i] if i < num_classes else 0 for i in range(len(labels))]
-
-    explode = (0.1, 0, 0)  # explode the 1st slice (Positive)
-
-    # Set custom colors for each sentiment class
-    colors = ['red', 'orange', 'green']
-
-    fig1, ax1 = plt.subplots()
-    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%', shadow=True, startangle=90, colors=colors)
-    ax1.axis('equal')  # Equal aspect ratio ensures that the pie chart is drawn as a circle.
-
-    # Ensure the 'static/image/svm' directory exists
-    image_dir = 'static/image/svm'
-    os.makedirs(image_dir, exist_ok=True)
-
-    # Save the Pie Chart image
-    pie_chart_path = os.path.join(image_dir, 'pie_chart_svm.png')
-    plt.savefig(pie_chart_path)
-    plt.close('all')
-
-    return render_template('hasil.html', hasil_sentimen_svm=hasil_sentimen_svm, confusion_matrix=cm, accuracy=accuracy, precision=precision, recall=recall, f1=f1, wordcloud_path=wordcloud_path, pie_chart_path=pie_chart_path)
 
 
 
