@@ -80,8 +80,8 @@ def processing():
 def process():
     if request.method == 'POST':
         df = pd.read_csv(request.files['file'])
-        df['text_tokenize'] = df['content'].apply(preprocessing)
-        df['text_clean'] = df['content'].apply(clean_text)
+        df['text_tokenize'] = df['title'].apply(preprocessing)
+        df['text_clean'] = df['title'].apply(clean_text)
 
         # Melakukan tahap Labelling
         lexicon_df = pd.read_csv('static/lexicon-word-dataset.csv')  # Ganti dengan path yang sesuai

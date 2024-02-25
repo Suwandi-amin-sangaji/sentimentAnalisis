@@ -43,14 +43,37 @@
           <div class="row">
             <!-- Wordcloud Card -->
             <div class="col-md-6 col-12">
-
               <div class="card">
                 <div class="card-header">
                   <h5 class="card-title">Wordcloud</h5>
                 </div>
                 <div class="card-body">
                   {% if hasil_knn %}
-                  <img src="{{ url_for('static', filename='image/knn/wordcloud.png') }}" alt="Word Cloud" width="100%">
+                  <!-- <img src="{{ url_for('static', filename='image/knn/wordcloud.png') }}" alt="Word Cloud" width="100%">
+                  <a class="image-link" href="{{ url_for('static', filename='image/knn/wordcloud.png') }}">
+                    <img src="{{ url_for('static', filename='image/knn/wordcloud.png') }}" alt="Word Cloud"
+                      width="100%">
+                  </a> -->
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#wordclodKnn"
+                    data-theVideo="{{ url_for('static', filename='image/knn/wordcloud.png') }}">
+                    <img src="{{ url_for('static', filename='image/knn/wordcloud.png') }}" alt="Word Cloud"
+                      width="100%">
+                  </a>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="wordclodKnn" aria-labelledby="modalToggleLabel" tabindex="-1"
+                    style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <img src="{{ url_for('static', filename='image/knn/wordcloud.png') }}" alt="Word Cloud"
+                            width="100%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+
                   {% else %}
                   <p>Hasil KNN belum tersedia.</p>
                   {% endif %}
@@ -66,7 +89,25 @@
                 </div>
                 <div class="card-body">
                   {% if hasil_knn %}
-                  <img src="{{ url_for('static', filename='image/knn/pie_chart.png') }}" alt="Pie Chart" width="100%">
+                  <!-- <img src="{{ url_for('static', filename='image/knn/pie_chart.png') }}" alt="Pie Chart" width="100%"> -->
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#pieKnn"
+                    data-theVideo="{{ url_for('static', filename='image/knn/pie_chart.png') }}">
+                    <img src="{{ url_for('static', filename='image/knn/pie_chart.png') }}" alt="Word Cloud"
+                      width="100%">
+                  </a>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="pieKnn" aria-labelledby="modalToggleLabel" tabindex="-1"
+                    style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <img src="{{ url_for('static', filename='image/knn/pie_chart.png') }}" alt="Word Cloud"
+                            width="100%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   {% else %}
                   <p>Hasil KNN belum tersedia.</p>
                   {% endif %}
@@ -104,6 +145,7 @@
             <table class="table table-bordered">
               <thead>
                 <tr>
+                  <th>No</th>
                   <th>Judul</th>
                   <th>Sentimen</th>
                 </tr>
@@ -111,8 +153,17 @@
               <tbody>
                 {% for result in hasil_knn %}
                 <tr>
+                  <td>{{ loop.index }}</td>
                   <td>{{ result.title }}</td>
-                  <td>{{ result.sentiment }}</td>
+                  <td>
+                    {% if result['sentiment'] == 'Positive' %}
+                    <span class="badge bg-label-success">{{ result['sentiment'] }}</span>
+                    {% elif result['sentiment'] == 'Negative' %}
+                    <span class="badge bg-label-danger">{{ result['sentiment'] }}</span>
+                    {% else %}
+                    <span class="badge bg-label-warning">{{ result['sentiment'] }}</span>
+                    {% endif %}
+                  </td>
                 </tr>
                 {% endfor %}
               </tbody>
@@ -145,8 +196,24 @@
                 <div class="card-body">
                   <!-- Display the Word Cloud -->
                   {% if hasil_svm %}
-                  <img src="{{ url_for('static', filename='image/svm/wordcloud_svm.png') }}" alt="Word Cloud"
-                    width="100%">
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#wordclodSvm"
+                    data-theVideo="{{ url_for('static', filename='image/svm/wordcloud_svm.png') }}">
+                    <img src="{{ url_for('static', filename='image/svm/wordcloud_svm.png') }}" alt="Word Cloud"
+                      width="100%">
+                  </a>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="wordclodSvm" aria-labelledby="modalToggleLabel" tabindex="-1"
+                    style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <img src="{{ url_for('static', filename='image/svm/wordcloud_svm.png') }}" alt="Word Cloud"
+                            width="100%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   {% else %}
                   <p>Hasil SVM belum tersedia.</p>
                   {% endif %}
@@ -163,8 +230,25 @@
                 <div class="card-body">
                   <!-- Display the Pie Chart -->
                   {% if hasil_svm %}
-                  <img src="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}" alt="Pie Chart"
-                    width="100%">
+
+                    <a type="button" data-bs-toggle="modal" data-bs-target="#pieSvm"
+                    data-theVideo="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}">
+                    <img src="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}" alt="Word Cloud"
+                      width="100%">
+                  </a>
+
+                  <!-- Modal -->
+                  <div class="modal fade" id="pieSvm" aria-labelledby="modalToggleLabel" tabindex="-1"
+                    style="display: none;" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <img src="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}" alt="Word Cloud"
+                            width="100%">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   {% else %}
                   <p>Hasil SVM belum tersedia.</p>
                   {% endif %}
@@ -172,56 +256,66 @@
               </div>
             </div>
           </div>
-            <br>
-            <!-- Tampilkan metrik evaluasi dari SVM jika tersedia -->
-            {% if hasil_svm %}
-            <div class="table-responsive">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Accuracy</th>
-                    <th>Precision</th>
-                    <th>Recall</th>
-                    <th>F1 Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{{ accuracy_svm }}</td>
-                    <td>{{ precision_svm }}</td>
-                    <td>{{ recall_svm }}</td>
-                    <td>{{ f1_svm }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {% endif %}
-
-            <!-- Tampilkan hasil dari SVM jika tersedia -->
-            {% if hasil_svm %}
-            <div class="table-responsive">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Judul</th>
-                    <th>Sentimen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for result in hasil_svm %}
-                  <tr>
-                    <td>{{ result.title }}</td>
-                    <td>{{ result.sentiment }}</td>
-                  </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-            {% else %}
-            <p>Hasil SVM belum tersedia.</p>
-            {% endif %}
+          <br>
+          <!-- Tampilkan metrik evaluasi dari SVM jika tersedia -->
+          {% if hasil_svm %}
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Accuracy</th>
+                  <th>Precision</th>
+                  <th>Recall</th>
+                  <th>F1 Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>{{ accuracy_svm }}</td>
+                  <td>{{ precision_svm }}</td>
+                  <td>{{ recall_svm }}</td>
+                  <td>{{ f1_svm }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+          {% endif %}
+
+          <!-- Tampilkan hasil dari SVM jika tersedia -->
+          {% if hasil_svm %}
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>No</th>
+                  <th>Judul</th>
+                  <th>Sentimen</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for result in hasil_svm %}
+                <tr>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ result.title }}</td>
+                  <td>
+                    {% if result['sentiment'] == 'Positive' %}
+                    <span class="badge bg-label-success">{{ result['sentiment'] }}</span>
+                    {% elif result['sentiment'] == 'Negative' %}
+                    <span class="badge bg-label-danger">{{ result['sentiment'] }}</span>
+                    {% else %}
+                    <span class="badge bg-label-warning">{{ result['sentiment'] }}</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+          <p>Hasil SVM belum tersedia.</p>
+          {% endif %}
         </div>
       </div>
     </div>
-    {% endblock %}
+  </div>
+  {% endblock %}

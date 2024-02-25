@@ -224,12 +224,12 @@ def generate_csv_processing(data):
         # Create a CSV writer object
         csv_writer = csv.writer(csv_string)
 
-        header = ['title', 'date', 'link', 'content', 'text_tokenize', 'text_clean', 'label', 'score']
+        header = ['title', 'date', 'link', 'text_tokenize', 'text_clean', 'label', 'score']
         csv_writer.writerow(header)
 
         # Write data rows
         for item in data:
-            csv_writer.writerow([item['title'], item['date'], item['link'], item['content'], item['text_tokenize'], item['text_clean'], item['label'], item['score']])
+            csv_writer.writerow([item['title'], item['date'], item['link'], item['text_tokenize'], item['text_clean'], item['label'], item['score']])
 
     csv_content_processing = csv_string.getvalue()
     csv_string.close()

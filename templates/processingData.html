@@ -54,10 +54,9 @@
                 <table id="example" class="display">
                   <thead>
                     <tr class="text-nowrap">
+                      <th>No</th>
                       <th>Judul</th>
-                      <th>Tanggal</th>
-                      <th>Link</th>
-                      <th>Isi Berita</th>
+                      <!-- <th>Tanggal</th> -->
                       <th>text_tokenize</th>
                       <th>Text clean</th>
                       <th>Label</th>
@@ -67,20 +66,18 @@
                   <tbody>
                     {% for item in data %}
                     <tr>
+                      <td>{{ loop.index }}</td>
                       <td>{{ item['title'] }}</td>
-                      <td>{{ item['date'] }}</td>
-                      <td>{{ item['link'] }}</td>
+                      <!-- <td>{{ item['date'] }}</td> -->
+                      <!-- <td>{{ item['link'] }}</td>
                       <td>
                         <div class="content-preview">{{ item['content'] }}</div>
-                        <span class="read-more-btn" onclick="readMore(this)">Read more</span>
-                      </td>
+                      </td> -->
                       <td>
                         <div class="content-preview">{{ item['text_tokenize'] }}</div>
-                        <span class="read-more-btn" onclick="readMore(this)">Read more</span>
                       </td>
                       <td>
                         <div class="content-preview">{{ item['text_clean'] }}</div>
-                        <span class="read-more-btn" onclick="readMore(this)">Read more</span>
                       </td>
                       <td>{{ item['label'] }}</td>
                       <td>{{ item['score'] }}</td>

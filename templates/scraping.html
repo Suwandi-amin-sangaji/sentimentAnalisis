@@ -37,8 +37,6 @@
                             <label for="sourceDropdown" class="form-label">Sumber Berita</label>
                             <select class="form-select" id="sourceDropdown" name="source">
                                 <option value="detik">Detik.com</option>
-                                <option value="kompas">Kompas</option>
-                                <option value="tribun">Tribun</option> 
                                 <option value="tempo">Tempo.co</option>
                             </select>
                         </div>
@@ -76,6 +74,7 @@
                            <table id="example" class="display">
                                 <thead>
                                     <tr>
+                                        <th>No</th>
                                         <th>Judul</th>
                                         <th>Tanggal</th>
                                         <th>Link</th>
@@ -85,6 +84,7 @@
                                 <tbody>
                                     {% for item in data %}
                                     <tr>
+                                        <td>{{ loop.index }}</td>
                                         <td>{{ item['title'] }}</td>
                                         <td>{{ item['date'] }}</td>
                                         <td>{{ item['link'] }}</td>

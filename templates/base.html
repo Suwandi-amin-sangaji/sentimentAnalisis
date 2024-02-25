@@ -40,6 +40,9 @@
   <link rel="stylesheet" href="{{url_for('static',
     filename='assets/vendor/libs/apex-charts/apex-charts.css')}}" />
 
+  <!-- Link CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+
   <!-- Tambahkan stylesheet DataTables -->
   <!-- <link href="{{url_for('static', filename='assets/DataTables/css/dataTables.bootstrap.min.css')}}" rel="stylesheet">
 
@@ -54,6 +57,8 @@
   <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
   <script src="{{url_for('static', filename='assets/js/config.js')}}"></script>
+
+
 
 
 
@@ -125,6 +130,24 @@
     #layout-navbar.navbar-scrolled {
       background-color: rgba(255, 255, 255, 0.8) !important;
       /* Change the background color when scrolled */
+    }
+
+
+    .thumbnail {
+      margin-bottom: 6px;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+
+    .blur {
+      transform: scale(0.9);
+      opacity: 0.6;
+      -webkit-filter: blur(2px);
+      -moz-filter: blur(2px);
+      -o-filter: blur(2px);
+      -ms-filter: blur(2px);
+      filter: blur(2px);
     }
   </style>
 </head>
@@ -293,6 +316,30 @@
   <script src=" https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
   <script>
     new DataTable('#example');
+  </script>
+
+  <!-- Link to Magnific Popup JS -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('.image-link').magnificPopup({ type: 'image' });
+    });
+  </script> -->
+
+  <script>
+    $('.thumbnail').click(function () {
+      $('.modal-body').empty();
+      $($(this).parents('div').html()).appendTo('.modal-body');
+      $('#modal').modal({ show: true });
+    });
+
+    $('#modal').on('show.bs.modal', function () {
+      $('.col-6,.row .thumbnail').addClass('blur');
+    })
+
+    $('#modal').on('hide.bs.modal', function () {
+      $('.col-6,.row .thumbnail').removeClass('blur');
+    })
   </script>
 
 
