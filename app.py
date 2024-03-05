@@ -84,7 +84,7 @@ def process():
         df['text_clean'] = df['title'].apply(clean_text)
 
         # Melakukan tahap Labelling
-        lexicon_df = pd.read_csv('static/lexicon-word-dataset.csv')  # Ganti dengan path yang sesuai
+        lexicon_df = pd.read_csv('static/lexicon-word-dataset.csv')
         labeller = Labelling(df.to_dict(orient='records'), lexicon_df)
         df_labeled = labeller.labelling_data()
 
@@ -375,6 +375,7 @@ def hasil():
             precision_knn = ''
             recall_knn = ''
             f1_knn = ''
+            confusion_matrix = ''
 
     # Memeriksa apakah model SVM sudah didefinisikan
     if 'svm_model' not in globals():

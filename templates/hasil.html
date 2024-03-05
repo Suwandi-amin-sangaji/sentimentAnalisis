@@ -116,6 +116,38 @@
             </div>
           </div>
           <br>
+
+
+          <!-- consfusion matrix -->
+          <h4 class="text-center">Confusion Matrix KNN</h4>
+          <table class="table table-bordered table-responsive">
+            <tr>
+              <th></th>
+              <th>Negative</th>
+              <th>Neutral</th>
+              <th>Positive</th>
+            </tr>
+            <tr>
+              <td><b>Negative</b></td>
+              <td>{{ cm_knn[0][0] }}</td>
+              <td>{{ cm_knn[0][1] }}</td>
+              <td>{{ cm_knn[0][2] }}</td>
+            </tr>
+            <tr>
+              <td><b>Neutral</b></td>
+              <td>{{ cm_knn[1][0] }}</td>
+              <td>{{ cm_knn[1][1] }}</td>
+              <td>{{ cm_knn[1][2] }}</td>
+            </tr>
+            <tr>
+              <td><b>Positive</b></td>
+              <td>{{ cm_knn[2][0] }}</td>
+              <td>{{ cm_knn[2][1] }}</td>
+              <td>{{ cm_knn[2][2] }}</td>
+            </tr>
+          </table>
+          <br>
+
           <!-- Tampilkan metrik evaluasi dari KNN jika tersedia -->
           {% if hasil_knn %}
           <div class="table-responsive">
@@ -139,6 +171,10 @@
             </table>
           </div>
           {% endif %}
+          <br>
+          
+
+
 
           {% if hasil_knn %}
           <div class="table-responsive">
@@ -231,7 +267,7 @@
                   <!-- Display the Pie Chart -->
                   {% if hasil_svm %}
 
-                    <a type="button" data-bs-toggle="modal" data-bs-target="#pieSvm"
+                  <a type="button" data-bs-toggle="modal" data-bs-target="#pieSvm"
                     data-theVideo="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}">
                     <img src="{{ url_for('static', filename='image/svm/pie_chart_svm.png') }}" alt="Word Cloud"
                       width="100%">
@@ -257,6 +293,38 @@
             </div>
           </div>
           <br>
+
+           <!-- consfusion matrix -->
+           <h4 class="text-center">Confusion Matrix SVM</h4>
+           <table class="table table-bordered table-responsive">
+             <tr>
+               <th></th>
+               <th>Negative</th>
+               <th>Neutral</th>
+               <th>Positive</th>
+             </tr>
+             <tr>
+               <td><b>Negative</b></td>
+               <td>{{ cm_svm[0][0] }}</td>
+               <td>{{ cm_svm[0][1] }}</td>
+               <td>{{ cm_svm[0][2] }}</td>
+             </tr>
+             <tr>
+               <td><b>Neutral</b></td>
+               <td>{{ cm_svm[1][0] }}</td>
+               <td>{{ cm_svm[1][1] }}</td>
+               <td>{{ cm_svm[1][2] }}</td>
+             </tr>
+             <tr>
+               <td><b>Positive</b></td>
+               <td>{{ cm_svm[2][0] }}</td>
+               <td>{{ cm_svm[2][1] }}</td>
+               <td>{{ cm_svm[2][2] }}</td>
+             </tr>
+           </table>
+           <br>
+
+
           <!-- Tampilkan metrik evaluasi dari SVM jika tersedia -->
           {% if hasil_svm %}
           <div class="table-responsive">

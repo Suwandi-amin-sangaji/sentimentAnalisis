@@ -84,45 +84,6 @@ def scrape_tribun(katakunci, jumlah):
 
     return hasil_scraping[:jumlah] 
 
-    hasil_scraping = []
-    for i in range(1, 3):  # Ambil halaman 1 dan 2
-        url = f"https://www.tribunnews.com/search?q={katakunci}&page={i}"
-        response = requests.get(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-
-        articles = soup.find_all('li', class_='ptb15')
-        for article in articles:
-            time = article.find('time', class_='grey').text.split()
-            if time[2].lower() == 'oktober':
-                time[2] = 10
-            elif time[2].lower() == 'november':
-                time[2] = 11
-            elif time[2].lower() == 'desember':
-                time[2] = 12
-
-            date = f"{time[1]}/{time[2]}/{time[3]} {time[4]} {time[5]}"
-            link = article.find('h3').find('a')['href']
-            title = article.find('h3').find('a')['gs-title']
-
-            # Scraping isi berita dari link
-            content_response = requests.get(link)
-            content_soup = BeautifulSoup(content_response.text, 'html.parser')
-            content_paragraphs = content_soup.find_all('div', class_='gsc-table-result')
-            content = ' '.join([p.text.strip() for p in content_paragraphs])
-
-            data = {
-                'title': title,
-                'date': date,
-                'link': link,
-                'content': content
-            }
-
-            hasil_scraping.append(data)
-            if len(hasil_scraping) >= jumlah:
-                break # Tambahkan pernyataan print di sini
-
-    return hasil_scraping[:jumlah]
-
 def scrape_detik(katakunci, jumlah):
     hasil_scraping = []
     latest_date = None  # Variable to store the latest date
