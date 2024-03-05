@@ -117,10 +117,10 @@
           </div>
           <br>
 
-
-          <!-- consfusion matrix -->
-          <h4 class="text-center">Confusion Matrix KNN</h4>
-          <table class="table table-bordered table-responsive">
+          <!-- Confusion matrix -->
+          <h5 class="text-center">Confusion Matrix KNN</h5>
+          {% if cm_knn is not none and cm_knn|length > 0 %}
+          <table class="table table-bordered">
             <tr>
               <th></th>
               <th>Negative</th>
@@ -146,8 +146,14 @@
               <td>{{ cm_knn[2][2] }}</td>
             </tr>
           </table>
-          <br>
+          {% else %}
+          <p>Belum ada data.</p>
+          {% endif %}
 
+
+
+
+          <br>
           <!-- Tampilkan metrik evaluasi dari KNN jika tersedia -->
           {% if hasil_knn %}
           <div class="table-responsive">
@@ -172,9 +178,6 @@
           </div>
           {% endif %}
           <br>
-          
-
-
 
           {% if hasil_knn %}
           <div class="table-responsive">
@@ -294,37 +297,42 @@
           </div>
           <br>
 
-           <!-- consfusion matrix -->
-           <h4 class="text-center">Confusion Matrix SVM</h4>
-           <table class="table table-bordered table-responsive">
-             <tr>
-               <th></th>
-               <th>Negative</th>
-               <th>Neutral</th>
-               <th>Positive</th>
-             </tr>
-             <tr>
-               <td><b>Negative</b></td>
-               <td>{{ cm_svm[0][0] }}</td>
-               <td>{{ cm_svm[0][1] }}</td>
-               <td>{{ cm_svm[0][2] }}</td>
-             </tr>
-             <tr>
-               <td><b>Neutral</b></td>
-               <td>{{ cm_svm[1][0] }}</td>
-               <td>{{ cm_svm[1][1] }}</td>
-               <td>{{ cm_svm[1][2] }}</td>
-             </tr>
-             <tr>
-               <td><b>Positive</b></td>
-               <td>{{ cm_svm[2][0] }}</td>
-               <td>{{ cm_svm[2][1] }}</td>
-               <td>{{ cm_svm[2][2] }}</td>
-             </tr>
-           </table>
-           <br>
 
+          <!-- Confusion Matrix -->
+          <h5 class="text-center">Confusion Matrix SVM</h5>
+          {% if cm_svm is not none and cm_svm|length > 0 %}
+          <table class="table table-bordered">
+            <tr>
+              <th></th>
+              <th>Negative</th>
+              <th>Neutral</th>
+              <th>Positive</th>
+            </tr>
+            <tr>
+              <td><b>Negative</b></td>
+              <td>{{ cm_svm[0][0] }}</td>
+              <td>{{ cm_svm[0][1] }}</td>
+              <td>{{ cm_svm[0][2] }}</td>
+            </tr>
+            <tr>
+              <td><b>Neutral</b></td>
+              <td>{{ cm_svm[1][0] }}</td>
+              <td>{{ cm_svm[1][1] }}</td>
+              <td>{{ cm_svm[1][2] }}</td>
+            </tr>
+            <tr>
+              <td><b>Positive</b></td>
+              <td>{{ cm_svm[2][0] }}</td>
+              <td>{{ cm_svm[2][1] }}</td>
+              <td>{{ cm_svm[2][2] }}</td>
+            </tr>
+          </table>
+          {% else %}
+          <p>Belum ada data.</p>
+          {% endif %}
 
+          <br>
+          <br>
           <!-- Tampilkan metrik evaluasi dari SVM jika tersedia -->
           {% if hasil_svm %}
           <div class="table-responsive">
@@ -348,6 +356,8 @@
             </table>
           </div>
           {% endif %}
+
+
 
           <!-- Tampilkan hasil dari SVM jika tersedia -->
           {% if hasil_svm %}

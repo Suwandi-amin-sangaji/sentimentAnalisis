@@ -375,8 +375,6 @@ def hasil():
             precision_knn = ''
             recall_knn = ''
             f1_knn = ''
-            confusion_matrix = ''
-
     # Memeriksa apakah model SVM sudah didefinisikan
     if 'svm_model' not in globals():
         hasil_svm = ''
@@ -412,8 +410,6 @@ def hasil():
                            precision_knn=precision_knn, recall_knn=recall_knn, f1_knn=f1_knn, 
                            hasil_svm=hasil_svm, cm_svm=cm_svm, accuracy_svm=accuracy_svm, 
                            precision_svm=precision_svm, recall_svm=recall_svm, f1_svm=f1_svm)
-
-
 
 
 
