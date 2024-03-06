@@ -35,7 +35,7 @@
     <div class="col-md-6 col-lg-6 col-xl-6 order-0 mb-4">
       <div class="card h-100">
         <div class="card-header d-flex align-items-center justify-content-between pb-0">
-          <div class="card-title mb-0">
+          <div class="card-title mb-3">
             <h5 class="m-0 me-2">Hasil Sentiment Analisis KNN</h5>
           </div>
         </div>
@@ -118,8 +118,9 @@
           <br>
 
           <!-- Confusion matrix -->
-          <h5 class="text-center">Confusion Matrix KNN</h5>
+
           {% if cm_knn is not none and cm_knn|length > 0 %}
+          <h5 class="text-center">Confusion Matrix KNN</h5>
           <table class="table table-bordered">
             <tr>
               <th></th>
@@ -147,16 +148,11 @@
             </tr>
           </table>
           {% else %}
-          <p>Belum ada data.</p>
+          <p>Belum ada data matrix</p>
           {% endif %}
-
-
-
-
           <br>
-          <!-- Tampilkan metrik evaluasi dari KNN jika tersedia -->
           {% if hasil_knn %}
-          <div class="table-responsive">
+          <!-- <div class="table-responsive">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -175,7 +171,36 @@
                 </tr>
               </tbody>
             </table>
+          </div> -->
+          <div class="justify-content-center mt-0">
+            <h5 class="text-center">Classification Report</h5>
+            <a type="button" data-bs-toggle="modal" data-bs-target="#reportKnn"
+              data-theVideo="{{ url_for('static', filename='image/report/knn/classification_report_knn.png') }}">
+              <img src="{{ url_for('static', filename='image/report/knn/classification_report_knn.png') }}"
+                alt="Classification Report" width="100%" style="display: block; width: 100%;">
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="reportKnn" aria-labelledby="modalToggleLabel" tabindex="-1"
+              style="display: none;" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <img src="{{ url_for('static', filename='image/report/knn/classification_report_knn.png') }}"
+                      alt="Classification Report" width="150%">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+
+
+
+
+
+          {% else %}
+          <p>Belum ada data report</p>
           {% endif %}
           <br>
 
@@ -220,7 +245,7 @@
     <div class="col-md-6 col-lg-6 col-xl-6 order-0 mb-4">
       <div class="card h-100">
         <div class="card-header d-flex align-items-center justify-content-between pb-0">
-          <div class="card-title mb-0">
+          <div class="card-title mb-3">
             <h5 class="m-0 me-2">Hasil Sentiment Analisis SVM</h5>
           </div>
         </div>
@@ -299,8 +324,9 @@
 
 
           <!-- Confusion Matrix -->
-          <h5 class="text-center">Confusion Matrix SVM</h5>
+
           {% if cm_svm is not none and cm_svm|length > 0 %}
+          <h5 class="text-center">Confusion Matrix SVM</h5>
           <table class="table table-bordered">
             <tr>
               <th></th>
@@ -328,14 +354,13 @@
             </tr>
           </table>
           {% else %}
-          <p>Belum ada data.</p>
+          <p>Belum ada data matrix</p>
           {% endif %}
 
           <br>
-          <br>
           <!-- Tampilkan metrik evaluasi dari SVM jika tersedia -->
           {% if hasil_svm %}
-          <div class="table-responsive">
+          <!-- <div class="table-responsive">
             <table class="table table-bordered">
               <thead>
                 <tr>
@@ -354,11 +379,36 @@
                 </tr>
               </tbody>
             </table>
+          </div> -->
+          <div class="justify-content-center mt-0">
+            <h5 class="text-center">Classification Report</h5>
+            <a type="button" data-bs-toggle="modal" data-bs-target="#reportKnn"
+              data-theVideo="{{ url_for('static', filename='image/report/svm/classification_report_svm.png') }}">
+              <img src="{{ url_for('static', filename='image/report/svm/classification_report_svm.png') }}"
+                alt="Classification Report" width="100%" style="display: block; width: 100%;">
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="reportKnn" aria-labelledby="modalToggleLabel" tabindex="-1"
+              style="display: none;" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <img src="{{ url_for('static', filename='image/report/svm/classification_report_svm.png') }}"
+                      alt="Classification Report" width="150%">
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
+
+          {% else %}
+          <p>Belum ada data report</p>
           {% endif %}
 
 
-
+          <br>
           <!-- Tampilkan hasil dari SVM jika tersedia -->
           {% if hasil_svm %}
           <div class="table-responsive">

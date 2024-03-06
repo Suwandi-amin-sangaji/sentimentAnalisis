@@ -10,6 +10,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix
+from sklearn.metrics import classification_report
+
+import io
+import base64
+import matplotlib.pyplot as plt
 
 from wordcloud import WordCloud
 import matplotlib
@@ -209,6 +214,32 @@ def hasil_sentimen():
     plt.savefig(pie_chart_path)
     plt.close('all')
 
+
+
+    # Menghasilkan classification report
+    report = classification_report(actual_labels, [result['sentiment'] for result in hasil_sentimen])
+
+    # Membuat gambar dari classification report
+    plt.figure(figsize=(10, 6))
+    plt.text(0.5, 0.5, report, ha='center', va='center', fontsize=15)
+    plt.axis('off')
+
+    # Mengonversi gambar Matplotlib ke dalam format base64
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png',  bbox_inches='tight')
+    img_buffer.seek(0)
+    img_str = base64.b64encode(img_buffer.read()).decode()
+    plt.close()
+
+    # Pastikan direktori untuk menyimpan gambar ada
+    img_dir = 'static/image/report/knn'
+    os.makedirs(img_dir, exist_ok=True)
+
+    # Simpan gambar classification report sebagai file
+    img_path = os.path.join(img_dir, 'classification_report_knn.png')
+    with open(img_path, 'wb') as img_file:
+        img_file.write(base64.b64decode(img_str))
+
     return render_template('knn.html', hasil_sentimen=hasil_sentimen, confusion_matrix=cm,
                         accuracy=accuracy, precision=precision, recall=recall, f1=f1, wordcloud_path=wordcloud_path, pie_chart_path=pie_chart_path)
 
@@ -333,13 +364,39 @@ def hasil_sentimen_svm():
     plt.savefig(pie_chart_path)
     plt.close('all')
 
+
+  # Menghasilkan classification report
+    report_svm = classification_report(actual_labels, [result['sentiment'] for result in hasil_sentimen_svm])
+
+    # Membuat gambar dari classification report
+    plt.figure(figsize=(10, 6))
+    plt.text(0.5, 0.5, report_svm, ha='center', va='center', fontsize=16)
+    plt.axis('off')
+
+    # Mengonversi gambar Matplotlib ke dalam format base64
+    img_buffer = io.BytesIO()
+    plt.savefig(img_buffer, format='png', bbox_inches='tight')  # Menambahkan bbox_inches='tight' di sini
+    img_buffer.seek(0)
+    img_str = base64.b64encode(img_buffer.read()).decode()
+    plt.close()
+
+    # Pastikan direktori untuk menyimpan gambar ada
+    img_dir = 'static/image/report/svm'
+    os.makedirs(img_dir, exist_ok=True)
+
+    # Simpan gambar classification report sebagai file
+    img_path = os.path.join(img_dir, 'classification_report_svm.png')
+    with open(img_path, 'wb') as img_file:
+        img_file.write(base64.b64decode(img_str))
+
+
+
     return render_template('svm.html', hasil_sentimen_svm=hasil_sentimen_svm, confusion_matrix=cm, accuracy=accuracy, precision=precision, recall=recall, f1=f1, wordcloud_path=wordcloud_path, pie_chart_path=pie_chart_path)
 
 
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 
 @app.route('/hasil')
@@ -354,6 +411,7 @@ def hasil():
         precision_knn = ''
         recall_knn = ''
         f1_knn = ''
+        support_knn = ''
     else:
         try:
             hasil_knn = []
@@ -368,6 +426,8 @@ def hasil():
             precision_knn = precision_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
             recall_knn = recall_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
             f1_knn = f1_score(actual_labels_knn, [result['sentiment'] for result in hasil_knn], average='weighted')
+            report_knn = classification_report(actual_labels_knn, [result['sentiment'] for result in hasil_knn])
+            support_knn = report_knn.split("\n")[-2]  # Ambil baris terakhir (baris nilai dukungan)
         except:
             hasil_knn = ''
             cm_knn = ''
@@ -375,6 +435,8 @@ def hasil():
             precision_knn = ''
             recall_knn = ''
             f1_knn = ''
+            support_knn = ''
+
     # Memeriksa apakah model SVM sudah didefinisikan
     if 'svm_model' not in globals():
         hasil_svm = ''
@@ -383,6 +445,7 @@ def hasil():
         precision_svm = ''
         recall_svm = ''
         f1_svm = ''
+        support_svm = ''
     else:
         try:
             hasil_svm = []
@@ -397,6 +460,8 @@ def hasil():
             precision_svm = precision_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
             recall_svm = recall_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
             f1_svm = f1_score(actual_labels_svm, [result['sentiment'] for result in hasil_svm], average='weighted')
+            report_svm = classification_report(actual_labels_svm, [result['sentiment'] for result in hasil_svm])
+            support_svm = report_svm.split("\n")[-2]  # Ambil baris terakhir (baris nilai dukungan)
         except:
             hasil_svm = ''
             cm_svm = ''
@@ -404,14 +469,15 @@ def hasil():
             precision_svm = ''
             recall_svm = ''
             f1_svm = ''
+            support_svm = ''
 
     return render_template('hasil.html', 
                            hasil_knn=hasil_knn, cm_knn=cm_knn, accuracy_knn=accuracy_knn, 
                            precision_knn=precision_knn, recall_knn=recall_knn, f1_knn=f1_knn, 
+                           support_knn=support_knn,
                            hasil_svm=hasil_svm, cm_svm=cm_svm, accuracy_svm=accuracy_svm, 
-                           precision_svm=precision_svm, recall_svm=recall_svm, f1_svm=f1_svm)
-
-
+                           precision_svm=precision_svm, recall_svm=recall_svm, f1_svm=f1_svm,
+                           support_svm=support_svm)
 
 
 if __name__ == '__main__':
